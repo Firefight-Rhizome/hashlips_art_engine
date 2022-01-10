@@ -4,7 +4,7 @@ const path = require("path");
 const isLocal = typeof process.pkg === "undefined";
 const basePath = isLocal ? process.cwd() : path.dirname(process.execPath);
 const fs = require("fs");
-const keccak256 = require("keccak256");
+const crypto = require('crypto');
 const chalk = require("chalk");
 
 const { createCanvas, loadImage } = require(path.join(
@@ -100,9 +100,11 @@ const parseQueryString = (filename) => {
  * Given some input, creates a sha256 hash.
  * @param {Object} input
  */
-const hash = (input) => {
-  const hashable = typeof input === Buffer ? input : JSON.stringify(input);
-  return keccak256(hashable).toString("hex");
+ const hash = (input) => {
+   //createHash update does the type checking
+  return crypto.createHash('sha256')
+                .update(input)
+                .digest('hex');
 };
 
 /**
